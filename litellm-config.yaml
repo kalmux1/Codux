@@ -1,0 +1,27 @@
+model_list:
+  # Primary route: OmniRoute's intelligent auto-router
+  - model_name: "claude-sonnet-4-6"
+    litellm_params:
+      model: "openai/auto/coding" 
+      api_base: "http://omniroute:20128/v1"
+      api_key: os.environ/OMNIROUTE_API_KEY
+
+  # Alias to prevent CloudCLI UI errors if it defaults to Opus
+  - model_name: "claude-opus-5-5"
+    litellm_params:
+      model: "openai/auto/coding" 
+      api_base: "http://omniroute:20128/v1"
+      api_key: os.environ/OMNIROUTE_API_KEY
+
+  # Optional direct fallback
+  - model_name: "direct-openai-fallback"
+    litellm_params:
+      model: "openai/gpt-4o"
+      api_key: os.environ/OPENAI_API_KEY
+
+litellm_settings:
+  fallbacks: [{"claude-sonnet-4-6": ["direct-openai-fallback"]}]
+
+general_settings:
+  # This allows LiteLLM to run locally without a Postgres database
+  dangerously_permit_weak_or_unset_master_key: true

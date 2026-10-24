@@ -1,0 +1,30 @@
+# --- CRITICAL SECRETS ---
+.env
+.env.*
+!.env.example
+
+# --- Git ---
+.git
+.gitignore
+
+# --- Local Environment & IDE ---
+.devcontainer.json
+.vscode
+.idea
+.DS_Store
+
+# --- Local User State (Optional: You can remove these if you want them copied) ---
+Codux-Projects/.taskmaster/reports/
+Codux-Projects/.taskmaster/state.json
+
+# --- Python/Node Artifacts ---
+node_modules
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# --- Docker files ---
+Dockerfile
+.dockerignore
+docker-compose.yml

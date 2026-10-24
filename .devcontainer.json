@@ -1,0 +1,17 @@
+{
+  "name": "Claude Code & FreeLLMAPI Pipeline",
+  "dockerComposeFile": "./docker-compose.yml",
+  "service": "claude-code",
+  "workspaceFolder": "/workspace",
+  "initializeCommand": "ls",
+  "features": {
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Anthropic.claude-code"
+      ]
+    }
+  }
+}

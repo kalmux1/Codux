@@ -1,0 +1,83 @@
+services:
+  freellmapi:
+    image: ghcr.io/tashfeenahmed/freellmapi:latest
+    container_name: freellmapi
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3001:3001"
+    environment:
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - PORT=3001
+    volumes:
+      - freellmapi-data:/app/server/data
+    networks:
+      - ai-pipeline
+
+  omniroute:
+    image: diegosouzapw/omniroute:latest
+    container_name: omniroute
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:20128:20128"
+    environment:
+      - INITIAL_PASSWORD=${OMNIROUTE_INITIAL_PASSWORD}
+      - OMNIROUTE_MEMORY_MB=8192
+    volumes:
+      - omniroute-data:/app/data
+    networks:
+      - ai-pipeline
+
+  litellm:
+    image: ghcr.io/berriai/litellm:main-stable
+    container_name: litellm-proxy
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:4000:4000"
+    volumes:
+      - ./litellm-config.yaml:/app/config.yaml:ro
+    env_file:
+      - .env
+    command: ["--config", "/app/config.yaml", "--port", "4000"]
+    networks:
+      - ai-pipeline
+    depends_on:
+      - freellmapi
+      - omniroute
+
+  cloudcli:
+    build: .
+    image: kalmux/codux:latest
+    container_name: cloudcli-ui
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3005:3005"
+    environment:
+      - ANTHROPIC_BASE_URL=http://litellm:4000
+      - ANTHROPIC_API_KEY=${LITELLM_MASTER_KEY}
+      - ANTHROPIC_MODEL=claude-sonnet-4-6
+      - WORKSPACES_ROOT=/workspace 
+      - PORT=3005
+      - HOST=0.0.0.0
+      - CLOUDCLI_USERNAME=${CLOUDCLI_USERNAME}
+      - CLOUDCLI_PASSWORD=${CLOUDCLI_PASSWORD}
+      - CLAUDE_CONFIG_DIR=/home/node/.claude
+      # Use ':-' so it defaults to blank and doesn't throw a warning
+      - TWENTYFIRST_API_KEY=${TWENTYFIRST_API_KEY:-}
+    volumes:
+      - ./Codux-Projects:/workspace
+      - cloudcli-plugins:/home/node/.claude-code-ui/plugins
+      - cloudcli-claude-data:/home/node/.claude
+    networks:
+      - ai-pipeline
+    depends_on:
+      - litellm
+
+networks:
+  ai-pipeline:
+    driver: bridge
+
+volumes:
+  freellmapi-data:
+  omniroute-data:
+  cloudcli-plugins:
+  cloudcli-claude-data:
