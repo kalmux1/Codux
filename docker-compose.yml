@@ -55,13 +55,12 @@ services:
       - ANTHROPIC_BASE_URL=http://litellm:4000
       - ANTHROPIC_API_KEY=${LITELLM_MASTER_KEY}
       - ANTHROPIC_MODEL=claude-sonnet-4-6
-      - WORKSPACES_ROOT=/workspace 
+      - WORKSPACES_ROOT=/workspace
       - PORT=3005
       - HOST=0.0.0.0
       - CLOUDCLI_USERNAME=${CLOUDCLI_USERNAME}
       - CLOUDCLI_PASSWORD=${CLOUDCLI_PASSWORD}
       - CLAUDE_CONFIG_DIR=/home/node/.claude
-      # Use ':-' so it defaults to blank and doesn't throw a warning
       - TWENTYFIRST_API_KEY=${TWENTYFIRST_API_KEY:-}
     volumes:
       - ./Codux-Projects:/workspace
@@ -71,6 +70,8 @@ services:
       - ai-pipeline
     depends_on:
       - litellm
+    # Chromium needs more shared memory inside a container; prevents random crashes.
+    shm_size: "1gb"
 
 networks:
   ai-pipeline:
