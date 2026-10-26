@@ -61,27 +61,30 @@ cp .env.example .env
 Edit `.env` with your credentials:
 
 ```bash
-# Encryption key for FreeLLMAPI (generate with: openssl rand -hex 32)
-ENCRYPTION_KEY=your-32-byte-hex-key
+# Copy this file to .env and fill in real values
 
-# OmniRoute initial admin password
-OMNIROUTE_INITIAL_PASSWORD=your-secure-password
+# --- FreeLLMAPI ---
+ENCRYPTION_KEY=your-encryption-key
+PORT=3001
+FREELLMAPI_API_KEY=your-freellmapi-api-key
 
-# LiteLLM master key (used by CloudCLI)
+# --- OmniRoute (Required for the config you pasted) ---
+# 1. This is the password you will use to log into OmniRoute for the first time.
+OMNIROUTE_INITIAL_PASSWORD=your-omniroute-password
+
+# --- LiteLLM ---
 LITELLM_MASTER_KEY=sk-your-master-key
 
-# OmniRoute API key (for LiteLLM → OmniRoute auth)
+
+# 2. Go to http://localhost:20128 after starting the containers, log in, 
+#    generate an API key, and paste it here:
 OMNIROUTE_API_KEY=your-omniroute-api-key
 
-# Optional: OpenAI fallback
-OPENAI_API_KEY=your-openai-key
 
-# CloudCLI web UI credentials
-CLOUDCLI_USERNAME=admin
-CLOUDCLI_PASSWORD=your-ui-password
-
-# Optional: 21st.dev API key for components
-TWENTYFIRST_API_KEY=
+# --- CloudCLI UI Login ---
+# These are the credentials you will use to log into the Web UI at localhost:3005
+CLOUDCLI_USERNAME=your-cloudcli-username
+CLOUDCLI_PASSWORD=your-cloudcli-password
 ```
 
 ### 3. Start the Pipeline
